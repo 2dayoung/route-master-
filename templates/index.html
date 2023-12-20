@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Route Master</title>
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=a986bwktfz"></script>
+    <link rel="stylesheet" type="text/css" href="../../docs/css/examples-base.css" />
+</head>
+<body>
+
+<div>
+    <h2 style="font-size:32px;position:relative;left:50px;">Route Master</h2>
+    <p style="font-size:25px;position:relative;left:60%;">추천경로</p>
+    <p style="font-size:15px;position:relative;left:50px;">test 폴더에서 실행함. 2023-12-19 6:26</p>
+</div>   
+<h1></h1>
+<pre id="json-display"></pre>
+<div id="wrap" class="section" >
+
+    <div id="map" style="left:100px;width:50%;height:600px;"></div>
+
+    <!-- 새로운 div 추가
+    <div id="resultContainer" style="position: absolute;top : 180px; padding: 20px;left:60%">
+       
+        <script>
+          // Python에서 계산한 결과를 JavaScript 변수에 저장
+          var pythonResult = "Hello from Python!";  // 예시 결과, 실제 결과에 맞게 수정
+
+          // JavaScript로 HTML에 결과 추가
+          document.getElementById("resultContainer").innerHTML = '<p id="result" style="font-size:20px; text-align: left;">' + pythonResult +'</p>';
+        </script>
+    </div>
+ -->
+    <code id="snippet" class="snippet"></code>
+</div>  
+
+<script>
+    // var coordinate =  jsonData.list[0].coordinate;
+    // Flask에서 전달받은 JSON 데이터
+    var jsonData = {{ json_data|tojson|safe }};
+    // JSON 데이터에서 "name" 키의 값을 가져와서 문자열로 변환
+    var nameString = jsonData.list[0].address +'\n';
+    var userAge ;
+    
+
+    for (var i = 1; i < jsonData.list.length; i++) {
+        userAge = JSON.stringify(jsonData.list[i].address);
+        // usercoordinate = JSON.stringify(jsonData.list[i].coordinate);
+        nameString += userAge+'\n';
+        // coordinate.push(usercoordinate);
+    }
+   
+    // nameString += str(coordinate1);
+    // 변환된 문자열을 HTML에 추가
+    document.getElementById("json-display").innerHTML =  '<p id="result" style="font-size:20px; text-align: left;position: absolute;top : 180px; padding: 20px;left:60%">' + nameString +'</p>' ;
+    
+
+</script>
+
+<!-- 마커 -->
+<div id="map" style="width:100%;height:400px;"></div>
+
+<script>
+
+    var map = new naver.maps.Map('map', {
+        center: new naver.maps.LatLng(36.629449717767436, 127.45769316147752),
+        zoom: 13
+    });
+
+    var coordinate = [
+        '127.4633636,36.6289331',
+        '127.4601003,36.6321194',
+        '127.4641923,36.6259632',
+        '127.4625906,36.6341946',
+        '127.4654529,36.6314208'
+    ];
+
+    // 반복문을 사용하여 좌표를 지도에 마커로 표시
+    for (var i = 0; i < coordinate.length; i++) {
+        var coordinates = coordinate[i].split(',');
+        var lat = parseFloat(coordinates[1]);
+        var lng = parseFloat(coordinates[0]);
+
+        var marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(lat, lng),
+        map: map
+        });
+    }
+</script>
+
+</body>
+</html>
